@@ -28,7 +28,6 @@ Multiple users and terms can be targeted and sorted at once and relevant links f
 
 - `PirateUserSearcherGUI.py`: Main application script.
 - `Resources/`: Directory containing images (`storm.jpg`, `pirate.png`, etc.) and theme (`harle.json`).
-- `PirateUserSearcherGUI.pth`: File containing path to `Pmw` for PyInstaller to include it correctly.
 - `PirateUserSearcherGUI.spec`: PyInstaller specification file for building the executable.
 - `requirements.txt`: Lists all Python dependencies required to run the application.
 
@@ -37,7 +36,7 @@ Multiple users and terms can be targeted and sorted at once and relevant links f
 To run the application directly (without building an executable):
 1. Clone the repository:
    ```bash
-   git clone https://github.com/<your-username>/PirateUserSearcherGUI.git
+   git clone https://github.com/AutomationsByAuto/PirateUserSearcherGUI.git
    cd PirateUserSearcherGUI
    ```
 2. Install dependencies:
@@ -52,32 +51,33 @@ To run the application directly (without building an executable):
 
 ## Building the Executable
 
-To create a standalone executable, use PyInstaller with the provided `PirateUserSearcherGUI.spec` file. You must customize the `.spec` file to match your system’s file paths for Python libraries and the `Resources/` folder.
+To create a standalone executable, use PyInstaller with the provided `PirateUserSearcherGUI.spec` file. You must customize the `.spec` file to include the path to your `Pmw` library and match your system’s file paths for Python libraries and the `Resources/` folder.
 
 ### Step 1: Prepare Resources
 
 1. Ensure the `Resources/` directory is in the project root.
 2. Verify the following files are in `Resources/`:
-   - Images: `storm.jpg`, `pirate.png`, `home.png`, `form.png`, `delete.png`, `search.png`, `back.png`, `coffee.png`, `selected.png`, `unselected.png`
+   - Images: `storm.jpg`, `pirate.png`, `pirate.ico`, `home.png`, `form.png`, `delete.png`, `search.png`, `back.png`, `coffee.png`, `selected.png`, `unselected.png`
    - Theme: `harle.json`
 3. Confirm file names match those referenced in `PirateUserSearcherGUI.py`.
 
 ### Step 2: Customize the `.spec` File
 
-The `PirateUserSearcherGUI.spec` file specifies paths to resources and Python libraries. Update the `datas` section to point to your system’s paths.
+The `PirateUserSearcherGUI.spec` file specifies paths to resources and Python libraries. You must update the `datas` section to include the path to your `Pmw` library and other system-specific paths.
 
-1. **Locate Your Python Environment**:
+1. **Locate Your Python Environment and Pmw Path**:
    - Find your Python installation’s `site-packages` and `tcl`/`tk` directories. Examples:
      - **Windows**: `C:\Users\<YourUsername>\AppData\Local\Programs\Python\Python313\Lib\site-packages`, `C:\Users\<YourUsername>\AppData\Local\Programs\Python\Python313\tcl\tcl8.6`, `C:\Users\<YourUsername>\AppData\Local\Programs\Python\Python313\tcl\tk8.6`
      - **Linux**: `/usr/lib/python3.9/site-packages`, `/usr/lib/tcl8.6`, `/usr/lib/tk8.6`
      - **macOS**: `/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages`
+   - Locate the `Pmw` library in your `site-packages` directory (e.g., `<path-to-your-python>/Lib/site-packages/Pmw`).
    - Use Python to find `site-packages`:
      ```python
      python -c "import site; print(site.getsitepackages())"
      ```
 
 2. **Update the `.spec` File**:
-   - Open `PirateUserSearcherGUI.spec` and modify the `datas` section. Below is a sample `.spec` with placeholders:
+   - Open `PirateUserSearcherGUI.spec` and modify the `datas` section to include the `Pmw` path and other resources. Below is a sample `.spec` with placeholders:
      ```python
      a = Analysis(
          ['PirateUserSearcherGUI.py'],
@@ -137,6 +137,7 @@ The `PirateUserSearcherGUI.spec` file specifies paths to resources and Python li
      )
      ```
    - Replace `<path-to-your-python>` with your Python installation path (e.g., `C:/Users/<YourUsername>/AppData/Local/Programs/Python/Python313`).
+   - Ensure the `Pmw` path points to the `Pmw` directory in your `site-packages` (e.g., `C:/Users/<YourUsername>/AppData/Local/Programs/Python/Python313/Lib/site-packages/Pmw`).
    - Ensure `Resources/` paths point to the project’s `Resources/` directory (e.g., `Resources/storm.jpg` assumes the file is in `project/Resources/`).
    - The `Resources` destination in `datas` (e.g., `('Resources/harle.json', 'Resources')`) ensures files are placed in a `Resources/` subfolder in the built executable, matching the script’s `resource_path("Resources/<filename>")` usage.
 
@@ -168,7 +169,7 @@ Run the executable:
 ## Notes
 
 - **Resources Folder**: The `Resources/` folder is critical. It contains all images and the `harle.json` theme file. Ensure it is included in the repository and placed in the project root.
-- **Why Customize the `.spec`?**: The `.spec` file tells PyInstaller where to find resources and libraries. Paths are system-specific, so users must update them. The script uses a `resource_path` function to locate files in PyInstaller’s `_MEIPASS` directory, requiring the `.spec` to bundle files into a `Resources/` subfolder.
+- **Why Customize the `.spec`?**: The `.spec` file tells PyInstaller where to find resources and libraries, including `Pmw`. Paths are system-specific, so users must update them. The script uses a `resource_path` function to locate files in PyInstaller’s `_MEIPASS` directory, requiring the `.spec` to bundle files into a `Resources/` subfolder.
 - **Single-File Executable**: For a single `.exe`, modify the `.spec`:
   ```python
   exe = EXE(
@@ -181,7 +182,7 @@ Run the executable:
       bootloader_ignore_signals=False,
       strip=False,
       upx=True,
-      console=True,
+      console=False,
   )
   ```
   Remove the `coll = COLLECT` block and set `exclude_binaries=False`.
@@ -196,8 +197,8 @@ Run the executable:
 
 ## Troubleshooting
 
-- **FileNotFoundError**: Ensure all resources are in `Resources/` and listed in `datas` with destination `'Resources'`. Check paths in `.spec`.
-- **Pmw/Tkinter Errors**: Verify `Pmw`, `tcl8.6`, and `tk8.6` paths match your Python installation.
+- **FileNotFoundError**: Ensure all resources are in `Resources/` and listed in `datas` with destination `'Resources'`. Check paths in `.spec`, including the `Pmw` path.
+- **Pmw/Tkinter Errors**: Verify the `Pmw`, `tcl8.6`, and `tk8.6` paths in the `.spec` match your Python installation.
 - **Console Output**: Keep `console=True` in `.spec` to see errors. Check `dist/PirateUserSearcherGUI/` for logs.
 - **Logging**: Add to `PirateUserSearcherGUI.py` for debugging:
   ```python
@@ -205,7 +206,7 @@ Run the executable:
   logging.basicConfig(filename='app.log', level=logging.DEBUG)
   ```
   Check `app.log` in the executable directory.
-- **Build Fails**: Verify dependencies (`pip install -r requirements.txt`) and `.spec` paths.
+- **Build Fails**: Verify dependencies (`pip install -r requirements.txt`) and `.spec` paths, especially the `Pmw` path in `datas`.
 
 ## Usage
 
