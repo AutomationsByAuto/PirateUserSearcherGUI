@@ -15,11 +15,11 @@ Multiple users and terms can be targeted and sorted at once and relevant links f
 ## Prerequisites
 
 - **Python 3.8+**: Ensure Python is installed with `tcl` and `tk` (usually included by default).
-- Install dependencies:
+- Install dependencies from `requirements.txt`:
   ```bash
-  pip install customtkinter pandas requests aiohttp pillow CTkMessagebox Pmw
+  pip install -r requirements.txt
   ```
-- **PyInstaller**: Required for building the executable:
+- **PyInstaller**: Required for building the executable (optional for running):
   ```bash
   pip install pyinstaller
   ```
@@ -30,6 +30,7 @@ Multiple users and terms can be targeted and sorted at once and relevant links f
 - `Resources/`: Directory containing images (`storm.jpg`, `pirate.png`, etc.) and theme (`harle.json`).
 - `PirateUserSearcherGUI.pth`: File containing path to `Pmw` for PyInstaller to include it correctly.
 - `PirateUserSearcherGUI.spec`: PyInstaller specification file for building the executable.
+- `requirements.txt`: Lists all Python dependencies required to run the application.
 
 ## Running the Application
 
@@ -39,8 +40,12 @@ To run the application directly (without building an executable):
    git clone https://github.com/<your-username>/PirateUserSearcherGUI.git
    cd PirateUserSearcherGUI
    ```
-2. Ensure all resources are in the `Resources/` directory (see below).
-3. Run the script:
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. Ensure all resources are in the `Resources/` directory (see below).
+4. Run the script:
    ```bash
    python PirateUserSearcherGUI.py
    ```
@@ -94,7 +99,6 @@ The `PirateUserSearcherGUI.spec` file specifies paths to resources and Python li
              ('Resources/unselected.png', 'Resources'),
              ('Resources/harle.json', 'Resources'),
              ('Resources/pirate.ico', 'Resources')
-    ],
          ],
          hiddenimports=['Pmw', 'Pmw.Balloon', 'tkinter', 'customtkinter', 'Pmw.Color', 'Pmw.MessageDialog', 'Pmw.ScrolledText', 'PIL', 'PIL.Image', 'PIL.ImageTk'],
          hookspath=[],
