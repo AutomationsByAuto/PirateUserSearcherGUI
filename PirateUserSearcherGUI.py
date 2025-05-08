@@ -836,7 +836,8 @@ class PirateSearcherApp:
         self.user_input.delete(0, ctk.END)
         self.user_input.insert(0, LOADED_USERS)
         self.term_box.delete("0.0", "end-1c")
-        self.term_box.insert("0.0", LOADED_TERMS)
+        for item in LOADED_TERMS:  # for loop maintains correct formatting
+            self.term_box.insert("end-1c", item + " ")
 
     def proxy_checker(self, url):
         """Check if a Pirate Bay URL is valid.
